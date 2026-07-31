@@ -2,6 +2,10 @@
 
 A public, vendor-neutral collection of reusable skills for AI coding agents, maintained by ZioNet and used in our own projects.
 
+## Skills
+
+- [`docs-consistency-review`](skills/docs-consistency-review/) reviews documentation against code, configuration, tests, and related documents.
+
 ## Structure
 
 Each directory under [`skills/`](skills/) is an independent Agent Skills-compatible package with a required `SKILL.md` file and optional references, scripts, examples, or assets.
