@@ -26,7 +26,7 @@ Expose persistence, ownership, consistency, migration, and lifecycle choices bef
 
 ## Workshop Conduct
 
-- **Shared view:** use an ERD, document relationship, ownership map, state model, or data flow when it makes entities, keys, consistency, or boundaries visible. On a text-only host use console ASCII.
+- **Shared view:** for a `full` or `medium` pass, expect an ERD, relationship view, ownership map, state model, or data flow unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it makes entities, keys, consistency, or boundaries visible. On a text-only host use console ASCII.
 - **Facilitate, do not dictate:** agree entities or documents, identities, relationships, and ownership before choosing a storage product. Walk at least one write and one important read or recovery flow.
 - Distinguish system of record, projection, cache, event, and disposable working state.
 - Re-render material changes and iterate until the human confirms, delegates, skips, or leaves the decision open.

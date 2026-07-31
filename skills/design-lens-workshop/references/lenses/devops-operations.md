@@ -27,7 +27,7 @@ Expose deployment, environment, CI/CD, configuration, secrets, access, rollback,
 ## Workshop Conduct
 
 - **Inspect before proposing:** read the repository's existing provider, pipeline, deployment, and infrastructure configuration. Do not default a non-GitHub project to GitHub Actions or replace an established delivery model silently.
-- **Shared view:** use a deployment topology or promotion path when it clarifies environments, nodes, identities, pipelines, rollback, or manual boundaries. On a text-only host use console ASCII.
+- **Shared view:** for a `full` or `medium` pass, expect a deployment topology or promotion path unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it clarifies environments, nodes, identities, pipelines, rollback, or manual boundaries. On a text-only host use console ASCII.
 - **Facilitate, do not dictate:** sketch the relevant topology, agree the promotion and rollback path, and separate automated guarantees from manual or external steps.
 - State capability limits honestly. Do not describe a syntax check, dry run, or proposed control as runtime proof.
 - Re-render material changes and iterate until the human confirms, delegates, skips, or leaves the decision open.

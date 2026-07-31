@@ -25,7 +25,7 @@ Keep implementation structure aligned with responsibilities, volatility, couplin
 
 ## Workshop Conduct
 
-- **Shared view:** render a component map with dependency direction when it clarifies ownership or coupling. On a text-only host use console ASCII.
+- **Shared view:** for a `full` or `medium` pass, expect a component map with dependency direction unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it clarifies ownership or coupling. On a text-only host use console ASCII.
 - **Render the full component map before asking:** show every component by name with a one-line responsibility, grouped by the chosen decomposition vocabulary. Never present only a count or a reference to an unseen map.
 - Invite the human to rename, split, merge, remove, or reassign components. Re-render the map after every material change and walk at least one key flow through it.
 - Justify an abstraction with real variation, ownership, complexity, or reuse. Prefer a local implementation when those signals are absent.

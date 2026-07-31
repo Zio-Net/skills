@@ -1,11 +1,11 @@
 # <Feature> — Design Record
 
-Status: In progress | Accepted
+Status: In progress | Handoff complete | Accepted
 Updated: <YYYY-MM-DD>
 
-<!-- A checkpoint may omit sections that are not useful yet. A final export keeps every section below and writes "None" for an empty section. This is not a transcript or implementation plan. -->
+<!-- A checkpoint may omit sections that are not useful yet. A final export keeps all seven sections below and writes "None" for an empty section. "Handoff complete" means the workshop and export are complete. Use "Accepted" only after explicit whole-design acceptance with no unresolved load-bearing decision. This is not a transcript or implementation plan. -->
 
-## Design brief
+## Design brief, context, and evidence
 
 ### Known
 
@@ -19,22 +19,23 @@ Updated: <YYYY-MM-DD>
 
 - <Unresolved load-bearing question>
 
-## Context and evidence
+### Evidence
 
 - <Repository path, document, existing behavior, constraint, or user decision>
 
-## Workshop progress
-
-<!-- Keep for checkpoints; remove from an accepted final export. -->
+## Lens scope and decisions
 
 - Selected: <lens ids and depths>
 - Skipped: <lens ids and reasons>
+- Keeper artifacts: <links, if any>
+
+### Checkpoint progress
+
+<!-- Keep this subsection for checkpoints; remove only this subsection from a final export. -->
+
 - Completed: <lens ids>
 - Current: <lens id or synthesis>
 - Remaining: <lens ids>
-- Keeper artifacts: <links, if any>
-
-## Decisions
 
 ### <Lens name>
 

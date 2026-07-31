@@ -26,7 +26,7 @@ Prevent silent structural decisions. Architecture is where costly-to-change choi
 
 ## Workshop Conduct
 
-- **Shared view:** use a component, service, context, or flow diagram when it exposes coupling or boundaries. Render it inline so the human can see it; on a text-only host use console ASCII.
+- **Shared view:** for a `full` or `medium` pass, expect a component, service, context, or flow diagram unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it exposes coupling or boundaries. Render it inline so the human can see it; on a text-only host use console ASCII.
 - **Facilitate, do not dictate:** raise the decision points as a discussion. Co-decide the decomposition style, co-design the component map, and walk at least one flow before presenting completed architecture options.
 - Invite the human to rename, split, merge, or reassign boundaries. Re-render changes and iterate until they confirm, delegate, skip, or leave a decision open.
 - Return the decision to the main workshop method before loading the next lens.

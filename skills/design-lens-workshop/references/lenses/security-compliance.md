@@ -24,7 +24,7 @@ Surface identity, authorization, data protection, privacy, audit, and regulatory
 
 ## Workshop Conduct
 
-- **Shared view:** use a trust-boundary and attack-surface diagram when it makes actors, data, privileges, or controls easier to inspect. On a text-only host use console ASCII.
+- **Shared view:** for a `full` or `medium` pass, expect a trust-boundary or attack-surface diagram unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it makes actors, data, privileges, or controls easier to inspect. On a text-only host use console ASCII.
 - **Facilitate, do not dictate:** walk the trust boundaries and attack surface with the human. Agree the identity, authorization, data classification, and controls at each relevant boundary.
 - Include denial and failure behavior, not only the happy path. Ask what happens when identity, policy, or secret retrieval fails.
 - Re-render material changes and iterate until the human confirms, delegates, skips, or leaves the decision open.

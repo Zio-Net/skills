@@ -25,7 +25,7 @@ Make service boundaries, contracts, protocols, versioning, compatibility, and me
 
 ## Workshop Conduct
 
-- **Shared view:** use a service-interaction or contract sequence when it clarifies producers, consumers, timing, failure, or ownership. On a text-only host use console ASCII.
+- **Shared view:** for a `full` or `medium` pass, expect a service-interaction or contract sequence unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it clarifies producers, consumers, timing, failure, or ownership. On a text-only host use console ASCII.
 - **Facilitate, do not dictate:** sequence the key interaction with the human. Agree the contract shape, error envelope, timing, retry semantics, and ownership before selecting tooling.
 - Walk timeout, duplicate, partial-failure, and compatibility behavior where relevant.
 - Re-render material changes and iterate until the human confirms, delegates, skips, or leaves the decision open.

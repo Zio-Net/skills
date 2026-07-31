@@ -26,7 +26,7 @@ Make user experience a first-class design input. When a feature changes an inter
 
 ## Workshop Conduct
 
-- **Shared view:** use an inline layout, wireframe, navigation flow, or state sketch when it clarifies the interaction. On a text-only host use console ASCII.
+- **Shared view:** for a `full` or `medium` pass, expect an inline layout, wireframe, navigation flow, or state sketch unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it clarifies the interaction. On a text-only host use console ASCII.
 - **Facilitate, do not dictate:** start from the available UX source of truth, co-design the main journey and recovery states, and show the view before asking for approval.
 - Ask the human to change labels, placement, flow, ownership, or states. Re-render material changes until the layout and interaction are confirmed, delegated, skipped, or left open.
 - Do not let a UI decision collapse into backend structure without showing the user-visible consequence.
@@ -57,7 +57,7 @@ Make user experience a first-class design input. When a feature changes an inter
 
 - Record the UX source of truth and any missing design evidence.
 - Decide client/server ownership for paging, sorting, filtering, grouping, and synchronization.
-- Preserve the agreed primary journey, important states, and recovery behavior.
+- Preserve the agreed layout or sketch, primary journey, important states, and recovery behavior in the conversational handoff or requested export.
 - Identify visual, accessibility, responsive, or interaction signals that would validate the design.
 
 ## Validation Signals
