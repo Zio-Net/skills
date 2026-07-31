@@ -42,7 +42,7 @@ Updated: <YYYY-MM-DD>
 - Choice: <Selected direction>
 - Why: <Reasoning and evidence>
 - Consequences: <Constraints, risks, or follow-up implications>
-- Status: Accepted | Delegated | Skipped | Provisional | Open
+- Status: accepted | delegated | skipped | provisional | open
 
 ## Proposed design
 
