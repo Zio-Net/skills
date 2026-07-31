@@ -29,7 +29,7 @@ Before composing the agenda, read only the `Applicability Signals` section from 
 
 For each selected lens you work:
 
-1. **Fully load only the active lens's Markdown file** (`references/lenses/<lens-id>.md`) for its `Design Decision Points`, `Workshop Conduct`, `Question Bank`, trade-off dimensions, validation signals, and source notes. Do not improvise it from memory.
+1. **Fully load only the active lens's Markdown file** (`references/lenses/<lens-id>.md`) for its `Design Decision Points`, `Workshop Conduct`, `Question Bank`, trade-off dimensions, and validation signals. Do not improvise it from memory.
 2. **Facilitate** the discussion for that lens using the method below.
 3. **Capture** the decision, rationale, consequences, and honest agreement status in the conversation.
 4. **Reload this method** and carry settled constraints into the next lens. Load only the next lens's full file when that lens starts.
