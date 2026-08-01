@@ -27,11 +27,13 @@ Prevent silent structural decisions. Architecture is where costly-to-change choi
 ## Workshop Conduct
 
 - **Shared view:** for a `full` or `medium` pass, expect a component, service, context, or flow diagram unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it exposes coupling or boundaries. Render it inline so the human can see it; on a text-only host use console ASCII.
-- **Facilitate, do not dictate:** raise the decision points as a discussion. Co-decide the decomposition style, co-design the component map, and walk at least one flow before presenting completed architecture options.
-- Invite the human to rename, split, merge, or reassign boundaries. Re-render changes and iterate until they confirm, delegate, skip, or leave a decision open.
-- Return the decision to the main workshop method before loading the next lens.
+- **Parallel scan mode:** identify structural constraints, volatility, coupling, and viable decomposition forks from evidence. Return concerns and questions; do not choose a decomposition or render a finished component map.
+- **Workshop mode:** co-decide the decomposition style and co-design the component map. Invite the human to rename, split, merge, or reassign boundaries, and re-render material changes.
+- Return the lens result to the main workshop method. Do not load another lens from this reference.
 
 ## Question Bank
+
+Use these questions to guide analysis. Do not present them as an interview list; ask only an unresolved question selected by the main workshop method.
 
 - What structural decision will be hardest to change later?
 - Which part should be data-driven rather than prompt-driven or code-driven?

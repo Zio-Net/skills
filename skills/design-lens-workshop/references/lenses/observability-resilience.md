@@ -26,12 +26,15 @@ Ensure the design can explain what happened, detect failure, fail safely, and re
 ## Workshop Conduct
 
 - **Shared view:** use a request trace, failure-mode flow, or signal table when it makes diagnosis and recovery visible. On a text-only host use console ASCII.
-- **Facilitate, do not dictate:** trace one important success path and one failure mode with the human. Agree the signals, error handling, ownership, and recovery behavior.
+- **Parallel scan mode:** trace important success and failure paths far enough to identify signal, ownership, degradation, recovery, and operability gaps. Do not select the final telemetry or recovery design.
+- **Workshop mode:** agree those decisions with the human when they introduce new promises, ownership, or risk acceptance.
 - Distinguish user error, dependency failure, configuration failure, code defect, and platform outage where the response differs.
-- Re-render material changes and iterate until the human confirms, delegates, skips, or leaves the decision open.
-- Return the decision to the main workshop method before loading the next lens.
+- Re-render material changes before review. In parallel scan mode, return the finding to the coordinator without a separate human response.
+- Return the lens result to the main workshop method. Do not load another lens from this reference.
 
 ## Question Bank
+
+Use these questions to guide analysis. Do not present them as an interview list; ask only an unresolved question selected by the main workshop method.
 
 - How will a user or operator know the feature worked?
 - How will they know it failed, and what should they do next?

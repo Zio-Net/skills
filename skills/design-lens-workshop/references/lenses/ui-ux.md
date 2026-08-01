@@ -27,12 +27,14 @@ Make user experience a first-class design input. When a feature changes an inter
 ## Workshop Conduct
 
 - **Shared view:** for a `full` or `medium` pass, expect an inline layout, wireframe, navigation flow, or state sketch unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it clarifies the interaction. On a text-only host use console ASCII.
-- **Facilitate, do not dictate:** start from the available UX source of truth, co-design the main journey and recovery states, and show the view before asking for approval.
-- Ask the human to change labels, placement, flow, ownership, or states. Re-render material changes until the layout and interaction are confirmed, delegated, skipped, or left open.
+- **Parallel scan mode:** inspect the available UX source of truth and identify journey, recovery, accessibility, content, and state concerns. Return decision forks and questions; do not propose a final layout or flow.
+- **Workshop mode:** co-design labels, placement, flow, ownership, and states with the human. Re-render material changes before asking again.
 - Do not let a UI decision collapse into backend structure without showing the user-visible consequence.
-- Return the decision to the main workshop method before loading the next lens.
+- Return the lens result to the main workshop method. Do not load another lens from this reference.
 
 ## Question Bank
+
+Use these questions to guide analysis. Do not present them as an interview list; ask only an unresolved question selected by the main workshop method.
 
 - Is there a Figma file, screenshot, image, or existing screen to match?
 - What user task should the first screen optimize?

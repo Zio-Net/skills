@@ -7,13 +7,13 @@ description: Use when a user explicitly asks to workshop, deepen, challenge, or 
 
 ## Purpose
 
-Drive the design lenses as a real, point-of-use **workshop** — not a checklist skimmed once. Facilitate the design with the human, one lens at a time, and finish with a reviewable design handoff.
+Drive the design lenses as a real, point-of-use **workshop** — not a checklist skimmed once and not a finished design handed down before discussion. By default, facilitate the selected lenses one at a time with the human. When parallel scan mode is explicitly requested, run independent lens scans and synthesize their concerns into a decision agenda before co-design. Finish with a reviewable design handoff.
 
 This is a standalone workshop. It has no lifecycle, gate, selector, planning, or implementation role. Do not write code, implementation plans, task lists, or governance records, and do not continue into planning when the workshop ends.
 
 ## The Big Picture (read this first, every time)
 
-You are facilitating a design conversation with a human, **one lens at a time**. The lenses live in `references/lenses/`:
+You are facilitating a design workshop with a human. Lenses are perspectives on one design. Workshop mode works through selected lenses one at a time with the human and is the default. Parallel scan mode runs an optional independent multi-lens scan that discovers concerns and decision points before discussion; it is not a shortcut to a finished design. The lenses live in `references/lenses/`:
 
 - `architecture-core`
 - `component-design`
@@ -27,18 +27,29 @@ You are facilitating a design conversation with a human, **one lens at a time**.
 
 Before composing the agenda, read only the `Applicability Signals` section from each of the nine lens files. Do not load their remaining content yet. This is a lightweight applicability scan, not a selector or questionnaire.
 
-For each selected lens you work:
+Treat `architecture-core`, `component-design`, and `requirements-nfr` as foundational. Always include all three in the selected set, then use the applicability scan to select any of the remaining six lenses that can materially shape or validate this design. Foundational means always evaluated, not always `full`. In workshop mode, every selected foundational lens still gets a visible turn; when it introduces no new concern, use `light` depth, render an explicit no-new-concern finding, and ask the human to confirm, correct, or move on. In parallel scan mode, its worker may return that finding to the coordinator without a separate human turn.
 
-1. **Fully load only the active lens's Markdown file** (`references/lenses/<lens-id>.md`) for its `Design Decision Points`, `Workshop Conduct`, `Question Bank`, trade-off dimensions, and validation signals. Do not improvise it from memory.
-2. **Facilitate** the discussion for that lens using the method below.
-3. **Capture** the decision, rationale, consequences, and honest agreement status in the conversation.
-4. **Reload this method** and carry settled constraints into the next lens. Load only the next lens's full file when that lens starts.
+After the applicability scan:
+
+- **Workshop mode:** fully load only the active lens file, facilitate it using the method below, capture its result, reload this method, and then load the next lens.
+- **Parallel scan mode:** create one independent, read-only analysis task per selected lens. When the host supports delegation, assign each task to a separate worker and run as many concurrently as capacity allows; batching is fine. Give every worker the same design brief and evidence boundary plus only its assigned lens reference. The worker may inspect relevant sources inside that boundary but must not load other lens references. If delegation is unavailable, say so plainly and execute the same lens tasks sequentially; never imply that independent workers ran.
+
+Each parallel-scan worker returns only: relevant evidence, concerns and risks, assumptions, real decision forks, questions that could change the design, validation signals, or an explicit no-new-concern finding. Workers do not produce the final design, make cross-lens decisions, write files, or continue into planning. The coordinator consolidates their findings and owns the conversation.
+
+In both modes, treat each `Question Bank` as prompts for reasoning, not a questionnaire to hand to the human. Do not ask merely because a lens contains a question.
 
 The per-lens *knowledge* is in the lens Markdown; this skill is the *method* that ties the lenses together. Keep both in view.
 
-**Render before you ask.** Before you raise any structured confirm, approve, move-on, or choice question about the workshop agenda, a diagram, the component map, an option set, or a design verdict, the material MUST already be rendered in your message in this exchange. Explain it fully enough to review, and make the question and any option labels self-explanatory. The question may reference only content that is on screen. Never ask the human to approve a count, a summary, an unseen file, or a "shown above" design that was not actually shown.
+**Render before you ask.** Before you raise any confirm, approve, move-on, or choice question about the workshop agenda, a diagram, the component map, an option set, or a design verdict, the material MUST already be rendered in your message in this exchange. Present the current understanding, evidence, recommendation or real alternatives, and assumptions fully enough to review. The question may reference only content that is on screen. Never ask the human to approve a count, a summary, an unseen file, or a "shown above" design that was not actually shown. Use a structured choice only for a genuinely discrete decision whose full alternatives are visible; free-text discussion always remains available.
 
-**Open each lens with a presentation and an open question, never a menu.** Present its relevant decision points, current understanding, evidence, and assumptions first. End with a free-text design question. Use a structured choice only later for a genuinely discrete decision whose full alternatives are already visible; free-text discussion always remains available.
+## Interaction modes
+
+Use **workshop mode** by default. Do not ask the human to choose a mode before starting.
+
+- **Workshop mode (default):** treat every selected lens as interactive. Give it its own visible discussion and human response, delegation, or skip before moving to the next lens. Offer all-at-once versus one-at-a-time pacing for a dense lens.
+- **Parallel scan mode:** use only when the human explicitly asks for parallel scan mode or parallel mode. Investigate every selected lens independently, consolidate concerns and questions, and stop at a prioritized cross-lens decision agenda. Do not turn the initial scan into a preferred design or design handoff.
+
+The human may switch modes at any point. A parallel-scan concern cluster may continue in workshop mode without changing how the remaining clusters are handled.
 
 ## First stage — build the design brief
 
@@ -57,77 +68,103 @@ Render:
 - binding constraints;
 - existing system context and evidence.
 
-Tag every material statement as `Known`, `Assumed`, or `Open`. Do not silently turn an assumption into a requirement. Ask only questions whose answers can change a design decision, risk, or validation approach. If context is too weak for technical design, say what is missing and continue only with assumptions the human accepts.
+Tag every material statement as `Known`, `Assumed`, or `Open`. Do not silently turn an assumption into a requirement. If context is too weak for technical design, say what is missing and continue with explicit provisional assumptions.
+
+Ask a question only when all of these are true:
+
+- the answer cannot be established efficiently from the available evidence;
+- the human is the appropriate source or decision owner;
+- the answer can materially change the recommendation, risk, or validation approach;
+- choosing and clearly labelling a provisional default would be unsafe or misleading.
+
+Otherwise inspect, infer, or recommend. In particular, do not ask the human to invent cost, latency, reliability, or quality thresholds before researching existing behavior and proposing a defensible target or range.
 
 ## The Method (the same for every lens)
 
-1. **Frame the phases + prepare to hand over the agenda.** Tell the human up front: the workshop selects the relevant technical lenses, works them one at a time, co-designs the system structure and important flows with them, reconciles cross-lens constraints, and ends with a design handoff — not an implementation plan.
+1. **Frame the workshop.** Tell the human up front: the workshop selects relevant technical lenses, works them one at a time by default, asks only for input that can materially change the design, and ends with a design handoff — not an implementation plan. State that they can request parallel scan mode when they want the main concerns and questions surfaced first.
 
-   Keep the human oriented while preparing. Explain that the agenda will list the selected lenses and the concrete decision each will ask them to make. Say plainly that they can answer in free text, ask for an explanation, correct the framing, bring an artifact, or request one-at-a-time pacing at any point.
+   Keep the human oriented while preparing. Explain that the agenda will show each selected lens, its depth, and the decision or risk it will examine; in parallel scan mode it also shows the independent scan angle. Say plainly that they can correct the framing, ask for an explanation, bring an artifact, delegate a decision, or request different pacing at any point.
 
-2. **Infer applicability, then hand over and confirm the agenda.** Read only the `Applicability Signals` sections from all nine lens files. Use the design brief and evidence to propose which lenses apply WITH your reasoning; ask the human only to confirm or adjust. Never make them answer obvious yes/no applicability questions, and never silently auto-resolve a material area.
+2. **Infer applicability.** Read only the `Applicability Signals` sections from all nine lens files. Always select the three foundational lenses: `architecture-core`, `component-design`, and `requirements-nfr`. Use the design brief, evidence, and applicability signals to determine which of the remaining six lenses apply. Never make the human answer obvious applicability questions. A lens can shape the parallel scan without creating its own human turn.
 
    Select a depth by risk and novelty:
 
    - `full` — several consequential or costly-to-reverse decisions;
-   - `medium` — focused decisions with meaningful trade-offs;
-   - `light` — one narrow decision or confirmation that no new concern is introduced.
+   - `medium` — bounded decisions with meaningful trade-offs;
+   - `light` — one narrow check or confirmation that no new concern is introduced.
 
-   Right-size the workshop. There is no mandatory core set and no fixed nine-lens marathon. Select every lens that raises a material decision for this feature; skip the rest with a feature-specific reason. Ordering a lens later is not skipping it.
+   Right-size the workshop. The three foundational lenses are always selected; select every additional lens that can materially shape or validate the design, and skip the rest with a feature-specific reason. Do not inflate a foundational lens into ceremonial work: when it introduces no new concern, keep it `light` and say so explicitly. In workshop mode, depth still varies but every selected lens is interactive. Ordering a lens later is not skipping it.
 
-   Render the agenda in-band before asking for confirmation or adjustment:
+   Render the mode-appropriate agenda in-band before asking for input or proceeding.
+
+   Workshop mode (default):
 
    ```text
    Workshop agenda — <N> lenses
-
-   <lens-id> (<full | medium | light>) — <the decision this lens will ask for THIS feature>
-   <lens-id> (<full | medium | light>) — <the decision this lens will ask for THIS feature>
-   ...
+   <lens-id> (<full | medium | light>, interactive) — <the decision this lens will work through>
+   <lens-id> (<full | medium | light>, interactive) — <the decision this lens will work through>
 
    Skipped:
    <lens-id> — <why it does not apply here>
    ```
 
-   Fill one line per selected lens with its depth and the **concrete decision it raises**, not only its name. Agenda confirmation approves only the selected lens list, order, and depths. It does not answer any lens. Do not offer or accept a batch shortcut as per-lens agreement.
-
-   **Stop and wait for agenda confirmation or adjustment. Do not open the first lens in the same exchange.**
-
-3. **Per-lens facilitated discussion — open with a presentation + an OPEN question, never a menu first.** The first turn of every lens MUST present the lens purpose, relevant decision points, current understanding, evidence, and explicit assumptions, then ask a free-text question about the first load-bearing decision.
-
-   Use this opening shape:
+   Parallel scan mode:
 
    ```text
-   Current lens — <lens-id>
+   Parallel lens scan — <N> lenses
+   <lens-id> (<full | medium | light>, independent) — <the angle, concern, or risk to investigate>
+   <lens-id> (<full | medium | light>, independent) — <the angle, concern, or risk to investigate>
 
-   This lens decides:
-   - <relevant decision point>
-   - <relevant decision point>
-
-   Current understanding:
-   <evidence and assumptions>
-
-   Pacing: answer these together, or ask me to take them one at a time.
-   Open question: <first load-bearing question>
+   Skipped:
+   <lens-id> — <why it does not apply here>
    ```
 
-   **Keep one active lens at a time; a lens may span multiple exchanges.** Do not bundle several lenses into one presentation or one confirm-all question. Focus on exactly one lens's decision points, ask for that lens's answer, and wait for the human before moving on.
+   Fill one line per selected lens with its depth and **concrete decision or risk**, not only its name.
 
-   **Pace a dense lens — after presenting, you MUST offer all-at-once OR one-at-a-time.** A lens with three or more relevant decision points becomes an overwhelming wall when one question secretly bundles several subjects. Respect the human's pacing choice. A light, single-decision lens skips the offer and asks its one open question.
+   In workshop mode, stop and wait for agenda confirmation before opening the first lens. In parallel scan mode, do not spend a separate turn confirming an unambiguous agenda: run the independent scans, render their concern consolidation and global question agenda, and stop for the human. The human may correct the lens scope in that reply.
+
+3. **Work evidence-first and co-design before conclusions.** Establish the relevant decision points, evidence, assumptions, trade-offs, and validation signals before settling a direction.
+
+   In workshop mode, keep one active lens at a time. Fully load it, then render the current understanding, evidence, and assumptions. Begin with an open question when one passes the question gate. For an evidence-backed `light` no-new-concern finding, ask only for `confirm / correct / move on` rather than inventing an open question. For a dense lens, offer all-at-once versus one-at-a-time pacing. Do not open the lens with a finished design. Wait for the human before moving to the next lens.
+
+   In parallel scan mode, consolidate related worker findings into one or more concern clusters. Keep question counts out of individual clusters:
+
+   ```text
+   Concern cluster — <cross-lens concern or unresolved decision>
+   Lenses: <contributing lens ids>
+   Evidence: <known context and source>
+   Concerns: <risks, tensions, and why they matter>
+   Real forks: <candidate directions only when there is a genuine fork>
+   ```
+
+   After all clusters, render exactly one global agenda:
+
+   ```text
+   Global parallel-scan question agenda
+   Critical blockers — answer first (recommended: up to 5 total):
+   1. <answer needed to choose a direction or control a major risk>
+   Prioritized follow-ups (recommended: up to 10 total):
+   1. <important question that can wait until the blocker is resolved>
+   ```
+
+   Create one global question agenda across the entire parallel-scan response, not one budget per cluster. Keep critical questions scarce: recommend up to five blockers whose answers can change direction, expose unacceptable risk, or determine validation. Recommend up to ten material follow-ups; fewer are valid. These are soft limits: never hide a genuinely important question only to meet a number. When either list exceeds its recommendation, show the necessary questions, group and rank them, and make the overload visible. Ask the human to answer the critical set first. Treat follow-ups as an agenda for later discussion, not a demand to answer everything at once.
+
+   After rendering the parallel-scan concern consolidation and global question agenda, stop and wait. Do not provide a finished component map, preferred architecture, or design handoff until the relevant load-bearing clusters have been discussed, delegated, skipped, or explicitly left open.
 
    Match the question form to the question. Use free text for constraints, intent, responsibilities, and genuinely open design work. For a discrete, enumerable choice, render the alternatives and an `other / let me explain` path before asking. Compare options only when there is a real fork; never manufacture alternatives to make the workshop look thorough.
 
-   Develop the design with the human. Adapt depth and explanation to their expertise. Explain trade-offs, failure modes, reversibility, and what evidence would change the recommendation. Give an evidence-based recommendation only after the relevant co-design discussion. Iterate until the human confirms, corrects, delegates, skips, or leaves the decision explicitly open.
+   Adapt depth and explanation to the human's expertise. Explain trade-offs, failure modes, reversibility, and what evidence would change a direction. In workshop mode, begin with evidence and an open question when one passes the question gate; use the short review prompt above for an evidence-backed `light` no-new-concern finding. Offer a recommendation after the human's intent and constraints are understood. In parallel scan mode, workers may identify promising directions but do not recommend the final design. Use open co-design whenever vocabulary, responsibilities, risk acceptance, or desired outcomes depend on human intent.
 
-4. **Surface visuals IN-BAND so the human can SEE them.** For a `full` or `medium` architecture, component, data, security, integration, deployment, or UI lens, expect a native shared view unless it would add no clarity for this feature. If you omit it, state the feature-specific reason. For a `light` lens, use a diagram or table only when it materially clarifies structure, state, trust, coupling, data ownership, deployment, interaction, or failure behavior. Never create a ceremonial diagram. On a text-only host, a fenced Mermaid block may be source text rather than a rendered picture, so render console ASCII inline by default. A richer file may supplement the inline view, but never replace the material the human is asked to review.
+4. **Surface visuals IN-BAND so the human can SEE them.** During the initial parallel scan, use a view only when it makes a concern, conflict, or decision fork easier to understand; do not use an integrated diagram to smuggle in a finished design. In workshop mode, for a `full` or `medium` structural or UI lens, expect a native shared view unless it would add no clarity for this feature. For a `light` lens, use one only when it materially clarifies the decision. After the relevant decisions are discussed, use the smallest set of shared views that explains the emerging design. Never create a ceremonial diagram. On a text-only host, a fenced Mermaid block may be source text rather than a rendered picture, so render console ASCII inline by default. A richer file may supplement the inline view, but never replace the material the human is asked to review.
 
    At any approval point, the relevant diagram or component map MUST be rendered in the same exchange as the question. Never stand in a reference to it or a bare count. If the human changes it, render the updated form before asking again. Ask whether they have an existing diagram, screenshot, Figma file, whiteboard photo, or document when that evidence would materially affect the design.
 
-5. **Co-design — do NOT hand down finished options.** For architecture and component work:
+5. **Co-design structure where it is consequential.** For architecture and component work:
 
-   - **Co-decide the design method or decomposition style** when it matters: for example bounded contexts, volatility-based decomposition, modular monolith, services, or layers. Discuss candidates and trade-offs; record the choice as a constraint. Do not silently assume it.
-   - **Co-build the component map — render the FULL form, never a summary or count.** Put in the message: first, an inline diagram of all components and dependency arrows; then a named list grouped by the chosen vocabulary, with every component's one-line responsibility.
-   - Only after the diagram and full named list are visible, invite the human to approve, rename, split, merge, remove, or reassign components. Walk at least one important user-and-system flow through the map together.
-   - If they ask for a change, re-render the updated diagram and list, then ask again. Iterate until the decomposition, responsibilities, and flow are agreed or honestly left open.
+   - Determine whether the design method or decomposition style creates a real, costly-to-reverse fork. In workshop mode, co-decide it. In parallel scan mode, workers identify viable decompositions, evidence, and boundary concerns; the coordinator surfaces the meaningful fork without choosing it silently.
+   - **When structure becomes the active decision, build the component map — render the FULL form, never a summary or count.** Put in the message: first, an inline diagram of all components and dependency arrows; then a named list grouped by the chosen vocabulary, with every component's one-line responsibility.
+   - Walk at least one important user-and-system flow through the map. Invite corrections when the full map is visible. In parallel scan mode do this only after the relevant concern cluster has been opened with the human; never treat approval of unseen details as agreement.
+   - If the human asks for a change, re-render the affected form before asking for approval again.
    - Only then present remaining trade-off options such as transport, storage technology, or granularity.
 
    Use this fill-in template:
@@ -146,29 +183,39 @@ Tag every material statement as `Known`, `Assumed`, or `Open`. Do not silently t
    Key flow: <actor action> -> <Component> -> <Component> -> <outcome>
    ```
 
-   Where the human's architecture expertise is low, drive the first draft and explain more, but still confirm the responsibilities and flows rather than authoring agreement silently.
+   After the human provides the direction needed for the active structural decision, drive the first draft unless they ask to lead. Explain more where their architecture expertise is low, but never author human agreement silently.
 
-6. **Capture the agreements honestly.** Before moving on, render the lens result:
+6. **Capture results honestly.** During the initial parallel scan, capture concerns and concern clusters as `open`, not as decisions. Record an evaluated lens with no material design impact as a finding, not a forced decision:
 
    ```text
-   Decision — <lens-id>
+   Finding — no new concern
+   Lens: <lens id>
+   Evidence: <why the existing design remains sufficient>
+   Review: agent-assessed | human-reviewed
+   ```
+
+   `agent-assessed` is not human agreement. In workshop mode, render the finding and wait for confirmation, correction, or explicit move-on before marking it `human-reviewed`. After discussion, capture cross-lens decisions; in workshop mode capture the active lens result:
+
+   ```text
+   Decision — <decision name>
+   Lenses: <contributing lens ids>
    Choice: <selected direction>
    Why: <reasoning and evidence>
    Consequences: <constraints, risks, and implications>
-   Status: accepted | delegated | skipped | provisional | open
+   Status: recommended | confirmed | delegated | skipped | provisional | open
    ```
 
-   Use `accepted` only after the substantive lens questions were surfaced and confirmed. Use `delegated` only after an explicit "you decide" and `skipped` only after an explicit skip. Agenda approval, silence, or a batch "looks good" is not per-lens agreement. A light decision may close with a short acknowledgement; a consequential decision requires explicit confirmation or correction.
+   Use `recommended` for an agent-recommended direction that is rendered with evidence but not explicitly accepted. Use `confirmed` only after the human reviews the rendered decision. Use `delegated` only after an explicit "you decide" and `skipped` only after an explicit skip. Use `provisional` for a default that depends on a material assumption. A human response may confirm several clearly rendered recommendations within the current active lens, never across several workshop-mode lenses at once.
 
    Carry settled decisions, assumptions, and constraints into later lenses. If a later lens invalidates an earlier decision, reopen it as `provisional`, re-render the affected design, and obtain confirmation again.
 
-   Before synthesis, count-check the agenda: every selected lens must have been surfaced separately and resolved as `accepted`, `delegated`, `skipped`, `provisional`, or `open` from an actual human response. Agenda approval is not a lens response. Do not silently backfill an untouched lens.
+   Before handoff, count-check the agenda: every selected lens must have contributed to a rendered decision, risk, validation signal, or explicit no-new-concern finding. In workshop mode every selected lens needs an actual human response; a no-new-concern finding closes only after human review, otherwise the lens remains `open`. In parallel scan mode every load-bearing concern cluster needs a human response, delegation, skip, or honest `open`/`provisional` status. The initial scan alone never counts as design acceptance. Do not silently mark a recommendation as confirmed.
 
-7. **Checkpoint when useful, THEN reload for the next lens.** Remain chat-only by default. Before a pause, after a consequential lens, or when the workshop grows long, offer to save the current design record. If no checkpoint is needed, announce the next lens and the decision it will resolve, then reload this method and load that lens's file. Resume from the conversation while it remains available. Durable resume across an unexpected exit, lost conversation, or agent change is guaranteed only by a saved checkpoint or export; never claim otherwise.
+7. **Checkpoint when useful.** Remain chat-only by default. In parallel scan mode offer a checkpoint after the concern consolidation, after consequential discussion, or before a pause; do not announce internal worker transitions. In workshop mode offer one after a consequential lens, then announce and load the next lens. Resume from the conversation while it remains available. Durable resume across an unexpected exit, lost conversation, or agent change is guaranteed only by a saved checkpoint or export; never claim otherwise.
 
-## Cross-lens synthesis and design handoff
+## Design synthesis and handoff
 
-After all selected lenses, reconcile conflicts and dependencies. Surface decisions that constrain several areas. Include named components and responsibilities, at least one important end-to-end flow, key risks, and validation signals. Add other views only when they clarify the design.
+Only after the selected workshop-mode lenses or parallel-scan concern clusters have been discussed, delegated, skipped, or honestly left open, reconcile conflicts and dependencies. The initial parallel-scan concern consolidation must stop before design synthesis. Surface decisions that constrain several areas. Include named components and responsibilities, at least one important end-to-end flow, key risks, and validation signals. Add other views only when they clarify the design.
 
 Return the design handoff in the conversation with these seven sections:
 
@@ -200,8 +247,8 @@ Never save a transcript, implementation tasks, an implementation plan, JSON stat
 
 ## Review Standard
 
-This skill is doing its job only when, in the human's view: applicability was inferred and explained; each selected lens was a genuine, paced discussion; diagrams and option sets were visible before approval; components and responsibilities were co-designed before finished alternatives; every decision has honest status and provenance; and the final handoff preserves the design without turning it into a plan.
+This skill is doing its job only when, in the human's view: workshop mode was the default and preserved genuine one-lens-at-a-time co-design; parallel scan mode used one independent analysis task per selected lens when delegation was available, disclosed any sequential fallback, and returned concern consolidation plus one prioritized global question agenda — scarce critical blockers first, material follow-ups second, with soft recommended limits — instead of a finished design; diagrams and option sets were visible before approval; every decision has honest status and provenance; and the final handoff preserves the design without turning it into a plan.
 
 ## Lineage
 
-This is a standalone adaptation with deliberate subtraction and handoff-oriented reframing of the latest [Specrew Design Workshop](https://github.com/alonf/specrew) method and its nine-lens knowledge pack. It retains the facilitation and co-design method while removing Specrew lifecycle, gates, Spec Kit integration, mandatory persistence, product-domain and code-implementation phases, and repository governance. It neither requires Specrew nor represents an official Specrew distribution.
+This is a standalone adaptation with deliberate subtraction and handoff-oriented reframing of the latest [Specrew Design Workshop](https://github.com/alonf/specrew) method and its nine-lens knowledge pack. Workshop mode retains the Specrew workshop spine; parallel scan mode is a standalone ZioNet extension. The skill removes Specrew lifecycle, gates, Spec Kit integration, mandatory persistence, product-domain and code-implementation phases, and repository governance. It neither requires Specrew nor represents an official Specrew distribution.
