@@ -37,12 +37,38 @@ Updated: <YYYY-MM-DD>
 - Current: <lens id or synthesis>
 - Remaining: <lens ids>
 
-### <Lens name>
+### Parallel-scan concern consolidation
 
+<!-- Use this subsection only for a parallel-scan checkpoint before design synthesis. Keep unresolved concerns out of decision-shaped records. Remove it after the clusters are resolved; carry anything still open into "Assumptions and open questions" in the final export. -->
+
+#### <Concern cluster>
+
+- Contributing lenses: <lens ids>
+- Evidence: <Known context and source>
+- Concerns: <Risks, tensions, and why they matter>
+- Real forks: <Genuine candidate directions, if any>
+- Status: open
+
+#### Global parallel-scan question agenda
+
+- Critical blockers: <Prioritized questions to answer first>
+- Follow-ups: <Prioritized questions for later discussion>
+
+### <Decision or lens name>
+
+- Contributing lenses: <lens ids>
 - Choice: <Selected direction>
 - Why: <Reasoning and evidence>
 - Consequences: <Constraints, risks, or follow-up implications>
-- Status: accepted | delegated | skipped | provisional | open
+- Status: recommended | confirmed | delegated | skipped | provisional | open
+
+### No-new-concern findings
+
+<!-- Keep findings separate from decisions. "agent-assessed" is not human agreement. -->
+
+- Lens: <lens id>
+  - Evidence: <Why the existing design remains sufficient>
+  - Review: agent-assessed | human-reviewed
 
 ## Proposed design
 

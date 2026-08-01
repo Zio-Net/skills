@@ -28,12 +28,15 @@ Expose deployment, environment, CI/CD, configuration, secrets, access, rollback,
 
 - **Inspect before proposing:** read the repository's existing provider, pipeline, deployment, and infrastructure configuration. Do not default a non-GitHub project to GitHub Actions or replace an established delivery model silently.
 - **Shared view:** for a `full` or `medium` pass, expect a deployment topology or promotion path unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it clarifies environments, nodes, identities, pipelines, rollback, or manual boundaries. On a text-only host use console ASCII.
-- **Facilitate, do not dictate:** sketch the relevant topology, agree the promotion and rollback path, and separate automated guarantees from manual or external steps.
+- **Parallel scan mode:** inspect the existing delivery model and identify topology, configuration, identity, environment, rollout, rollback, and evidence concerns. Do not select a final operational topology or policy.
+- **Workshop mode:** agree those choices with the human when a new operational boundary or policy decision remains open.
 - State capability limits honestly. Do not describe a syntax check, dry run, or proposed control as runtime proof.
-- Re-render material changes and iterate until the human confirms, delegates, skips, or leaves the decision open.
-- Return the decision to the main workshop method before loading the next lens.
+- Re-render material changes before review. In parallel scan mode, return the finding to the coordinator without a separate human response.
+- Return the lens result to the main workshop method. Do not load another lens from this reference.
 
 ## Question Bank
+
+Use these questions to guide analysis. Do not present them as an interview list; ask only an unresolved question selected by the main workshop method.
 
 - What install or deployment command should a normal user or operator run?
 - What dependencies are passive and automated versus explicit prerequisites?

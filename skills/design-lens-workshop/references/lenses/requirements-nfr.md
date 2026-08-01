@@ -26,12 +26,15 @@ Turn vague needs into measurable requirements and design-driving constraints. Ac
 ## Workshop Conduct
 
 - **Shared view:** use a quality-attribute priority table or comparison matrix when it makes priorities and thresholds easier to review.
-- **Facilitate, do not dictate:** agree the priority order of the relevant quality attributes and their measurable thresholds. Distinguish a design driver from a generic good practice.
+- **Parallel scan mode:** identify design-driving qualities, current evidence, missing thresholds, and quality tensions. Return concerns and human-owned questions; do not set final targets or priorities.
+- **Workshop mode:** agree the priority order and measurable thresholds with the human.
 - Keep statements tagged as `Known`, `Assumed`, or `Open`; do not turn a vague quality adjective into a fabricated target.
-- Iterate until the human confirms, delegates, skips, or explicitly leaves a threshold open.
-- Return the decision to the main workshop method before loading the next lens.
+- Preserve unsupported thresholds as provisional or open; do not turn them into a questionnaire or require a separate response for every quality attribute.
+- Return the lens result to the main workshop method. Do not load another lens from this reference.
 
 ## Question Bank
+
+Use these questions to guide analysis. Do not present them as an interview list; ask only an unresolved question selected by the main workshop method.
 
 - Who is the user, customer, operator, and disfavored user?
 - What user pain is this feature solving?

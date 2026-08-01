@@ -1,0 +1,7 @@
+interface:
+  display_name: "Design Lens Workshop"
+  short_description: "Technical design workshop with parallel lens scan"
+  default_prompt: "Use $design-lens-workshop in workshop mode to facilitate the relevant design lenses with me one at a time. Use parallel scan mode only when I explicitly ask for it."
+
+policy:
+  allow_implicit_invocation: false

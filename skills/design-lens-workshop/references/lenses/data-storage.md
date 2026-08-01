@@ -27,12 +27,15 @@ Expose persistence, ownership, consistency, migration, and lifecycle choices bef
 ## Workshop Conduct
 
 - **Shared view:** for a `full` or `medium` pass, expect an ERD, relationship view, ownership map, state model, or data flow unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it makes entities, keys, consistency, or boundaries visible. On a text-only host use console ASCII.
-- **Facilitate, do not dictate:** agree entities or documents, identities, relationships, and ownership before choosing a storage product. Walk at least one write and one important read or recovery flow.
+- **Parallel scan mode:** inspect existing data conventions and identify ownership, identity, lifecycle, consistency, migration, and recovery concerns. Return decision forks and questions; do not propose a final schema or storage direction.
+- **Workshop mode:** agree those decisions with the human before choosing a storage product.
 - Distinguish system of record, projection, cache, event, and disposable working state.
-- Re-render material changes and iterate until the human confirms, delegates, skips, or leaves the decision open.
-- Return the decision to the main workshop method before loading the next lens.
+- Re-render material changes before review. In parallel scan mode, return the finding to the coordinator without a separate human response.
+- Return the lens result to the main workshop method. Do not load another lens from this reference.
 
 ## Question Bank
+
+Use these questions to guide analysis. Do not present them as an interview list; ask only an unresolved question selected by the main workshop method.
 
 - What data must survive process restart, update, rollback, or uninstall?
 - Who creates, reads, updates, deletes, exports, and audits the data?

@@ -25,12 +25,15 @@ Surface identity, authorization, data protection, privacy, audit, and regulatory
 ## Workshop Conduct
 
 - **Shared view:** for a `full` or `medium` pass, expect a trust-boundary or attack-surface diagram unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it makes actors, data, privileges, or controls easier to inspect. On a text-only host use console ASCII.
-- **Facilitate, do not dictate:** walk the trust boundaries and attack surface with the human. Agree the identity, authorization, data classification, and controls at each relevant boundary.
-- Include denial and failure behavior, not only the happy path. Ask what happens when identity, policy, or secret retrieval fails.
-- Re-render material changes and iterate until the human confirms, delegates, skips, or leaves the decision open.
-- Return the decision to the main workshop method before loading the next lens.
+- **Parallel scan mode:** inspect trust boundaries, actors, data, privileges, policy, and attack surface far enough to identify risks and missing decisions. Do not select final controls or accept risk.
+- **Workshop mode:** agree those decisions with the human when a new trust boundary, compliance obligation, or risk acceptance remains open.
+- Include denial and failure behavior, not only the happy path. Determine what happens when identity, policy, or secret retrieval fails; ask only if repository evidence and established policy do not decide it.
+- Re-render material changes before review. In parallel scan mode, return the finding to the coordinator without a separate human response.
+- Return the lens result to the main workshop method. Do not load another lens from this reference.
 
 ## Question Bank
+
+Use these questions to guide analysis. Do not present them as an interview list; ask only an unresolved question selected by the main workshop method.
 
 - Who is allowed to do this, and who must be prevented?
 - What is the least-privilege role or permission set?

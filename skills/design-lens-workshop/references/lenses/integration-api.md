@@ -26,12 +26,15 @@ Make service boundaries, contracts, protocols, versioning, compatibility, and me
 ## Workshop Conduct
 
 - **Shared view:** for a `full` or `medium` pass, expect a service-interaction or contract sequence unless it would add no clarity for this feature; state the reason if omitted. For a `light` pass, use one only when it clarifies producers, consumers, timing, failure, or ownership. On a text-only host use console ASCII.
-- **Facilitate, do not dictate:** sequence the key interaction with the human. Agree the contract shape, error envelope, timing, retry semantics, and ownership before selecting tooling.
+- **Parallel scan mode:** inspect the key interaction and existing conventions to identify contract, coupling, timing, retry, failure, and ownership concerns. Do not select the final contract shape.
+- **Workshop mode:** agree those decisions with the human before selecting tooling when a real provider or ownership fork remains.
 - Walk timeout, duplicate, partial-failure, and compatibility behavior where relevant.
-- Re-render material changes and iterate until the human confirms, delegates, skips, or leaves the decision open.
-- Return the decision to the main workshop method before loading the next lens.
+- Re-render material changes before review. In parallel scan mode, return the finding to the coordinator without a separate human response.
+- Return the lens result to the main workshop method. Do not load another lens from this reference.
 
 ## Question Bank
+
+Use these questions to guide analysis. Do not present them as an interview list; ask only an unresolved question selected by the main workshop method.
 
 - Who are the producers and consumers?
 - Is the contract data or message oriented, or object and class oriented?
