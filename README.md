@@ -6,6 +6,7 @@ A public, vendor-neutral collection of reusable skills for AI coding agents, mai
 
 - [`docs-consistency-review`](skills/docs-consistency-review/) reviews documentation against code, configuration, tests, and related documents.
 - [`design-lens-workshop`](skills/design-lens-workshop/) facilitates a focused, lens-driven technical design conversation before planning or implementation. It is a subtractive standalone adaptation of the [Specrew Design Workshop](https://github.com/alonf/specrew) method and nine-lens knowledge pack under the MIT License; it does not require Specrew and is not an official Specrew distribution.
+- [`progressive-code-review`](skills/progressive-code-review/) runs an evidence-driven, staged branch review through risk-selected lenses, preserving decisions and surfacing design-shaping problems before dependent details.
 
 ## Structure
 
