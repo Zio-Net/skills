@@ -19,6 +19,9 @@ include_worktree: true
 initial_head: ""
 current_head: ""
 diff_fingerprint: ""
+boundary_fingerprint: ""
+included_pathspecs: []
+excluded_change_groups: []
 pull_request: ""
 created_at_utc: ""
 updated_at_utc: ""

@@ -52,6 +52,13 @@ With no `--branch`:
 5. Exclude every path under `.review/` from status, diffs, evidence packs, and
    findings.
 
+This initial boundary is the discovery boundary. If Scout finds unrelated
+change groups, the group or groups explicitly confirmed by the user become the
+exact review path boundary. Keep excluded changed paths in repository-state
+fingerprints and status diagnostics so drift remains visible, but exclude them
+from lens evidence and findings. Reviewing another excluded group later is a
+separate review scope.
+
 When HEAD is detached, treat it as the target commit and ask for a base only if
 the normal inference rules remain ambiguous.
 
@@ -99,11 +106,31 @@ path is unclassified.
 
 Use the template in `assets/review-checkpoint.md`.
 
+Do not create a new checkpoint while an unrelated-group scope question is
+unresolved. The scope-only Scout remains read-only and reports its groups in
+chat. After the user confirms the exact group boundary, compute its boundary
+fingerprint, then create or resume the matching checkpoint and persist the
+scope decision with the Scout profile.
+
 Choose one stable scope id:
 
-- `pr-<number>` when a PR is known at review start.
-- `branch-<sanitized-branch>-<initial-head7>` for a named branch.
-- `review-<utc-timestamp>-<initial-head7>` otherwise.
+- `pr-<number>` when a PR is known at review start and its full discovery
+  boundary remains in scope.
+- `pr-<number>-<boundary7>` when the user narrows a PR to confirmed change
+  groups.
+- `branch-<sanitized-branch>-<initial-head7>` for a named branch whose full
+  discovery boundary remains in scope.
+- `branch-<sanitized-branch>-<initial-head7>-<boundary7>` when the user narrows
+  a named branch to confirmed change groups.
+- `review-<utc-timestamp>-<initial-head7>` for any remaining full discovery
+  boundary.
+- `review-<utc-timestamp>-<initial-head7>-<boundary7>` for any remaining
+  narrowed boundary.
+
+Compute `boundary7` from the first seven hexadecimal characters of a SHA-256
+over the canonical sorted included pathspecs plus base, target, merge base, and
+working-tree inclusion mode. Record the full hash, included pathspecs, and
+excluded change groups in checkpoint metadata.
 
 Sanitize path separators and invalid filename characters to hyphens. Do not
 rename the scope id if a PR appears later; record the PR number inside the file.
@@ -128,7 +155,9 @@ This path is intentionally not assumed to be ignored. Before creating it:
 
 Record a new diff fingerprint whenever the reviewed state changes. Update the
 checkpoint after Scout, after every lens, after every human disposition, before
-and after an authorized fix, and before final handoff.
+and after an authorized fix, and before final handoff. For a pre-checkpoint
+scope-only Scout, write its profile and confirmed boundary when the checkpoint
+is first created.
 
 ## Run Review Scout
 
@@ -142,17 +171,39 @@ Scout must inspect:
 - change type, semantic size, blast radius, reversibility, evidence quality,
   and risk signals.
 
+Before selecting lenses, partition the included paths by coherent intended
+outcome. Current-branch mode defines what must be noticed; it does not prove
+that every staged, unstaged, untracked, and committed change belongs to one
+review. If the boundary contains unrelated-looking groups and task/PR evidence
+does not join them, stop after the scope profile, record
+`blocked-missing-evidence`, show the groups, and ask which group or groups are
+in scope. Do not finalize or start a lens agenda until that scope question is
+resolved.
+
 For a small and obvious scope, the coordinator performs Scout. For a large,
 mixed, ambiguous, or high-risk scope, use one dedicated read-only Scout worker.
-The Scout worker returns only a change profile and proposed agenda, not
-substantive findings or fixes.
+The Scout worker returns only a change profile and, when scope is resolved, a
+proposed agenda. It never returns substantive findings or fixes.
 
-Render an agenda containing every lens with:
+Apply the three-part applicability gate in `references/lens-catalog.md` before
+selecting each lens. Applicability comes from a surface causally changed by the
+reviewed artifact, not from subjects mentioned in documentation, people who
+may read it, or downstream decisions it may inform. Skip a lens when it cannot
+name a distinct plausible failure and evidence target beyond already selected
+lenses.
+
+When scope is resolved, render an agenda containing every lens with:
 
 - `selected` or `skipped`;
 - `light`, `standard`, or `deep` when selected;
 - a short evidence-based reason;
 - execution order.
+
+For every selected lens, name the changed mechanism and its distinct failure
+scenario. Two to four selected lenses is the normal focused result, not a
+quota. More than four is allowed only when every additional lens has a unique
+scenario and evidence target that the earlier lenses cannot cover; otherwise
+mark it `skipped`.
 
 Start the first lens immediately only for a small, unambiguous, low-risk scope.
 Wait for agenda confirmation when scope is large, mixed, ambiguous, or
