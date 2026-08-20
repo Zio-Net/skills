@@ -18,8 +18,8 @@ GitHub CLI 2.90 or newer can preview and install a skill into the correct agent-
 
 ```text
 gh skill preview Zio-Net/ai-coding-instructions SKILL_NAME
-gh skill install Zio-Net/ai-coding-instructions SKILL_NAME --agent codex --scope project
-gh skill install Zio-Net/ai-coding-instructions SKILL_NAME --agent claude-code --scope project
+gh skill install Zio-Net/skills SKILL_NAME --agent codex --scope project
+gh skill install Zio-Net/skills SKILL_NAME --agent claude-code --scope project
 ```
 
 Skills can also be copied manually from `skills/`.
