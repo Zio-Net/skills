@@ -15,6 +15,8 @@ scope too small to simplify usefully.
 ## Evidence to inspect
 
 - The changed code and the smallest necessary adjacent context.
+- Representative human-authored hotspots, separated from generated or
+  mechanical change volume.
 - Repository conventions, existing utilities/patterns, tests, and applicable
   documentation requirements.
 - Control flow, abstraction boundaries, duplication, naming, comments, and
@@ -35,8 +37,10 @@ scope too small to simplify usefully.
 
 ## Light / standard / deep
 
-- `light`: inspect the changed lines for obvious local complexity and convention
-  mismatches.
+- `light`: sample representative human-authored changes for duplication,
+  nesting, indirection, and convention mismatches. Layered file organization
+  alone is not sufficient evidence. If a large or cross-layer change cannot be
+  cleared with concrete evidence, use `standard`.
 - `standard`: inspect the containing module and existing patterns for safe
   consolidation or removal.
 - `deep`: use only when complexity spans the reviewed feature; trace whether

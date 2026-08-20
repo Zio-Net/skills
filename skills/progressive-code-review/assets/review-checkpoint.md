@@ -33,6 +33,24 @@ updated_at_utc: ""
 Record the stated problem, known acceptance criteria, source links or file
 paths, assumptions, and open questions.
 
+## User-requested explanations
+
+Record every explanatory question from the invocation and whether the current
+orientation answers it or leaves a named evidence gap. Do not silently defer an
+initial question until the final PR handoff.
+
+| Question | State | Answer or evidence gap | Evidence |
+|---|---|---|---|
+
+Allowed states: `answered` and `blocked-missing-evidence`.
+
+## Change orientation
+
+Record the user-facing `What this change does` explanation shown before the
+agenda: purpose, previous flow, changed end-to-end flow, important fields/types/
+contracts, and assumptions. Update this section and re-render the affected part
+in chat when later evidence changes the shared understanding.
+
 ## Scout profile
 
 Record change class, semantic size, blast radius, reversibility, evidence
@@ -43,8 +61,8 @@ quality, and whether a dedicated Scout worker was used.
 | Order | Lens | State | Depth | Selection reason |
 |---:|---|---|---|---|
 
-Allowed lens states: `selected`, `skipped`, `in-progress`, `paused`,
-`completed`, and `reopened`.
+Allowed lens states: `checked`, `selected`, `skipped`, `in-progress`,
+`paused`, `completed`, and `reopened`.
 
 ## Findings and dispositions
 

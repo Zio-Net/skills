@@ -10,8 +10,11 @@ makes the limit impossible.
 
 ## Summary
 
-Use one or two sentences: what changed, why it matters, and the intended
-behavior. Do not narrate the review process.
+Start with one plain-language sentence stating what changes for the user or
+system. Follow with a short paragraph explaining how it works and any important
+compatibility or no-data behavior. When clearer, replace that paragraph with
+one compact arrow flow or up to three bullets. Do not narrate the review
+process.
 
 ## Key decisions
 

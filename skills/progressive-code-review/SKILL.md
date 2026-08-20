@@ -12,16 +12,22 @@ load-bearing problems before details that depend on them.
 ## Non-negotiable behavior
 
 - Do not edit product code unless the user explicitly asks for a fix.
-- Lens workers and Scout workers are always read-only, even during an authorized
-  fix interlude.
-- Do not stage, unstage, commit, push, switch branches, publish a pull request,
-  or change git history.
-- Always run Review Scout. A user may override its agenda, but may not skip
-  Scout itself.
+- Lens workers and any delegated evidence workers are always read-only, even
+  during an authorized fix interlude.
+- Use any non-destructive Git operations needed to inspect the requested
+  change, including fetching missing refs, without asking permission. Ask
+  before any additional operation that would modify repository or remote/PR
+  state unless the user already authorized it.
+- Always run the initial analysis. A user may override its agenda, but may not
+  skip the analysis itself.
+- After scope is resolved, explain the change to the user before rendering the
+  lens agenda or starting a substantive lens. The first finding must not be the
+  user's introduction to the changed flow.
 - Run substantive lenses sequentially. Never run two lens workers in parallel.
 - Use fresh workers for separate lenses and for every post-fix re-review.
-- Snapshot content-sensitive repository fingerprints before and after every
-  read-only worker. Stop on any unexpected repository-state delta.
+- Compare repository state before and after each read-only worker. Stop only
+  when drift affects reviewed content, the checkpoint, HEAD/current branch,
+  the index, or evidence used by the active review.
 - Report only issues introduced by the reviewed change or directly blocking its
   stated goal. Do not turn the review into a repository-wide audit.
 - Treat deterministic checks as evidence, not as review lenses.
@@ -66,18 +72,14 @@ the normal inference rules remain ambiguous.
 
 With `--branch <ref>`:
 
-1. Resolve the ref locally to a commit before doing any review work.
-2. Review only committed changes on that target relative to the resolved base.
-3. Do not include the current checkout's working-tree changes.
-4. Do not checkout or switch to the target branch.
-5. Inspect target files and instructions with ref-aware commands such as
-   `git diff`, `git show`, and `git grep`. Do not accidentally read the current
-   checkout as if it were the target branch.
+Review only committed changes on that target relative to the resolved base; do
+not include the current checkout's working-tree changes or switch its branch.
+Resolve base and target to exact commits before Scout, fetching missing refs as
+needed under the non-destructive Git rule above.
 
-If the ref is missing locally, ask before fetching. If executing tests requires
-materializing the target, propose an isolated temporary worktree and wait for
-authorization. A static review may proceed without one if the evidence is
-sufficient.
+If executing tests requires materializing the target, propose an isolated
+temporary worktree and wait for authorization. A static review may proceed
+without one if the evidence is sufficient.
 
 ### Base resolution
 
@@ -90,6 +92,9 @@ Resolve base in this order:
 5. The remote default branch and merge base.
 6. Ask the user when multiple plausible bases would produce materially
    different scopes.
+
+Fetch missing base evidence as needed. Ask only when choosing among materially
+different plausible bases requires a user decision.
 
 Validate both base and target refs. Render the exact boundary before Scout:
 base, target, merge base, whether working-tree changes are included, and the
@@ -161,15 +166,26 @@ is first created.
 
 ## Run Review Scout
 
-Read `references/lens-catalog.md`. Do not load the seven full lens files yet.
+Read `references/lens-catalog.md` adjacent to the invoked `SKILL.md`. Workflow
+resources come from that skill directory, not from another copy on the review
+target. Do not load the seven full lens files yet.
 
 Scout must inspect:
 
 - the exact change boundary and changed-file summary;
 - the original task, PR, issue, or specification when available;
+- every explanation or question explicitly requested by the user at invocation;
 - target-ref repository instructions and relevant architecture documentation;
 - change type, semantic size, blast radius, reversibility, evidence quality,
   and risk signals.
+
+Scout performs a bounded initial probe of all seven lenses. For each lens it
+records one outcome: `skipped`, `light` (covered by the initial analysis), or a
+dedicated `standard`/`deep` review. Select a dedicated review only when the
+probe finds a concrete warning signal or a material evidence gap that it cannot
+resolve and that could change the verdict or implementation direction. A
+plausible question, broad change surface, or possible extra scrutiny is not
+enough. Otherwise finish the direct check and mark the lens `light`.
 
 Before selecting lenses, partition the included paths by coherent intended
 outcome. Current-branch mode defines what must be noticed; it does not prove
@@ -180,30 +196,70 @@ does not join them, stop after the scope profile, record
 in scope. Do not finalize or start a lens agenda until that scope question is
 resolved.
 
-For a small and obvious scope, the coordinator performs Scout. For a large,
-mixed, ambiguous, or high-risk scope, use one dedicated read-only Scout worker.
-The Scout worker returns only a change profile and, when scope is resolved, a
-proposed agenda. It never returns substantive findings or fixes.
+The coordinator performs the initial analysis and owns its classifications and
+three user-facing blocks. It may delegate a bounded evidence lookup when useful,
+but never delegates the synthesis or agenda.
 
-Apply the three-part applicability gate in `references/lens-catalog.md` before
-selecting each lens. Applicability comes from a surface causally changed by the
+If Scout or a lens takes longer than about one minute, send a short progress
+update that names the active stage, the flow or boundary being traced, and what
+evidence remains.
+
+Use the three-part applicability gate in `references/lens-catalog.md` to
+classify each lens. Applicability comes from a surface causally changed by the
 reviewed artifact, not from subjects mentioned in documentation, people who
-may read it, or downstream decisions it may inform. Skip a lens when it cannot
-name a distinct plausible failure and evidence target beyond already selected
-lenses.
+may read it, or downstream decisions it may inform. Only `standard` and `deep`
+lenses receive dedicated workers.
 
-When scope is resolved, render an agenda containing every lens with:
+## Explain the change and review plan
 
-- `selected` or `skipped`;
-- `light`, `standard`, or `deep` when selected;
-- a short evidence-based reason;
-- execution order.
+Before agenda confirmation or the first lens, render this complete shape,
+translated into the user's language:
 
-For every selected lens, name the changed mechanism and its distinct failure
-scenario. Two to four selected lenses is the normal focused result, not a
-quota. More than four is allowed only when every additional lens has a unique
-scenario and evidence target that the earlier lenses cannot cover; otherwise
-mark it `skipped`.
+```markdown
+### What this PR changes
+<one plain-language sentence about the user or system outcome>
+<a short before -> after explanation; use one compact flow or up to three
+bullets when clearer than prose>
+
+### How the review will run
+<one or two sentences: how many light checks are complete, how many detailed
+reviews remain, that they run sequentially, when the review pauses, and that it
+ends with a compact PR handoff>
+
+### Review plan
+| Order | Review | Status | Depth | Why |
+|---:|---|---|---|---|
+<all seven lenses>
+```
+
+Use `checked` with `light`, `selected` with `standard`/`deep`, and `skipped`
+with `—` for order and depth. Translate these labels when useful. Before asking
+for confirmation, verify that all three blocks and all seven rows are present.
+The confirmation response itself must contain the complete result; progress
+updates do not satisfy this contract and the response must not refer to content
+"above".
+
+Keep all three blocks short. Expand only when the user explicitly asks for a
+detailed explanation. If scope or primary flow is unclear, show the evidence
+gap and resolve it before rendering the blocks.
+
+Use plain review language in every user-facing message. Internal names such as
+Scout, coordinator, worker, and dossier stay internal; say initial analysis,
+light check, or detailed review and name what is actually being examined.
+
+Use evidence-shaped reasons: `checked` names the direct path and why it was
+enough; `selected` names the observed warning or material gap and the decision
+a light check could not resolve; `skipped` names the absent or unchanged
+surface. Prefer a focused initial agenda, typically about four dedicated lenses,
+rather than selecting every lens by default. Select more whenever each
+additional lens has a distinct unresolved signal or material evidence gap; if a
+light check cannot support a confident `checked`, promote it.
+Before rendering the table, downgrade any `selected` row whose reason only
+describes the changed surface; its reason must name the unresolved signal that
+requires a dedicated review.
+If a changed surface was inspected and holds up, mark it `checked`, not
+`skipped`. Substantial human-authored changes make simplicity at least a light
+check; overlap with other lenses is not a reason to skip it.
 
 Start the first lens immediately only for a small, unambiguous, low-risk scope.
 Wait for agenda confirmation when scope is large, mixed, ambiguous, or
@@ -215,6 +271,8 @@ Before each selected lens, prepare a compact context pack containing:
 
 - exact base, target, merge base, diff fingerprint, and path boundary;
 - Scout change profile and the active lens depth;
+- the rendered change orientation and each user-requested explanation with its
+  answered or evidence-gap state;
 - original task/specification evidence and unresolved questions;
 - applicable repository rules;
 - prior lens results and human dispositions;
@@ -226,6 +284,10 @@ challenge them when new evidence contradicts them.
 
 ## Run one lens at a time
 
+Before each selected lens, tell the user its position among selected lenses,
+its human-readable name, and in one sentence what it checks and why it was
+selected. Count only selected lenses in the total.
+
 Load only the selected file under `references/lenses/` and give it to a fresh
 read-only worker with the context pack.
 
@@ -234,26 +296,18 @@ the coordinator. Do not pretend the result came from an independent worker.
 Coordinator fallback is acceptable for the initial review, but it cannot count
 as a fresh independent post-fix reviewer.
 
-Workers may run relevant read-only commands and tests that do not rewrite
-tracked files. They must not change code, checkpoint state, git state, or PR
+Workers may use non-destructive Git inspection, fetch missing evidence, and run
+tests that do not rewrite tracked files. They must not change product files,
+the index, current branch or local history, checkpoint state, or remote/PR
 state.
 
-Before dispatching Scout or a lens worker, capture:
+Before and after each Scout or lens worker, compare content-sensitive
+fingerprints for HEAD/current branch, the index, working tree, untracked files,
+and checkpoint.
 
-- branch and HEAD;
-- a content hash of the binary staged diff;
-- a content hash of the binary tracked-worktree diff;
-- a sorted manifest with content hashes for every untracked file, including the
-  active checkpoint;
-- porcelain status as a readable diagnostic.
-
-Verify all fingerprints immediately after the worker returns and before
-updating the checkpoint. Path lists alone are insufficient because a worker can
-change an already-dirty, already-staged, or existing untracked file without
-changing status. If a worker changes files, refs, branch, or index
-unexpectedly, stop, report the exact delta, and do not undo it automatically.
-Pre-approved disposable test artifacts are the only exception and must be named
-in the context pack with their expected lifecycle.
+Stop only for drift that can affect the active review. Otherwise report it
+briefly, refresh the fingerprint, and continue. If relevance is unclear,
+inspect it first. Never undo or attribute drift to the worker without evidence.
 
 ### Worker result contract
 
@@ -265,8 +319,11 @@ Require this structure:
    - priority `P0`, `P1`, `P2`, or `P3`;
    - tight file/line location when applicable;
    - concrete failure or risk;
+   - the step or component in the rendered change orientation where it occurs;
    - user/system impact;
    - evidence and why the reviewed change causes it;
+   - evidence basis, distinguishing direct code evidence, test/runtime
+     confirmation, inference, and missing evidence;
    - recommended direction, not an implementation patch.
 3. `Assumptions and evidence gaps`.
 4. `Challenge/reopen` when prior context should be reconsidered.
@@ -284,6 +341,55 @@ Priority meanings:
 Workers do not issue an overall merge verdict. The coordinator checks evidence,
 deduplicates overlaps, preserves material disagreement, and owns the final
 state.
+
+### User-facing review result
+
+After each detailed review, render this self-contained shape, translated into
+the user's language:
+
+```markdown
+### Review X of N — <plain-language name>
+<the question checked, why it matters, and enough context to understand the
+changed flow; use a compact arrow flow when it has three or more material steps>
+
+#### What I checked
+- <intent or domain rule>
+- <main end-to-end code, data, or contract path>
+- <relevant tests, runtime evidence, or explicit evidence gap>
+
+#### What held up
+<the material behavior and edge cases confirmed by the review>
+
+#### Findings
+##### <plain-language title> — <blocks merge | should fix | minor>
+<current flow and concrete failure scenario>
+<impact, precise evidence, and recommended direction>
+
+#### What happens next
+<whether review continues or pauses and the available choices>
+```
+
+Keep it compact, but preserve every applicable section. A detailed review with
+material findings must explain the relevant flow and evidence, not collapse
+into a verdict plus a short issue list. Omit `Findings` only when there are no
+findings and say so explicitly. Put the complete result in the response that
+ends the lens; progress updates do not satisfy this contract. Before sending,
+verify that `Review X of N`, `What I checked`, `What held up`, and `What happens
+next` are present, plus either `Findings` or an explicit no-findings statement.
+Every detailed lens ends the current user turn; start the next one only after
+the user continues, including when no findings were found.
+
+Lead with behavior and impact; put method names and file references in the
+evidence. Keep local finding ids, `P0`-`P3`, gate states, and dispositions in
+the checkpoint. In chat say `critical`, `blocks merge`, `should fix`, or `minor`
+instead. Remove internal ids and priorities from the user-facing draft before
+sending. Never refer to a review only as first, current, or previous.
+
+
+If worker evidence contradicts or materially expands the rendered orientation,
+the coordinator must update and show the affected orientation before presenting
+findings that depend on the new understanding. Do not make the user reconstruct
+the corrected flow from a finding.
 
 ## Gate, disposition, and resume
 

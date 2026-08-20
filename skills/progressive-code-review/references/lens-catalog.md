@@ -21,17 +21,35 @@ Classify the scope using observable evidence:
 - Evidence quality: clear task and tests, partial intent, conflicting sources,
   or missing specification.
 
+Call a change forward-only only when migration or rollback evidence proves it;
+persisted data or a large migration is not enough by itself.
+
 ## Selection signals
 
-Pass all three gates before selecting a lens:
+Probe every lens, then apply three gates:
 
 1. **Changed surface:** the reviewed artifact causally changes behavior,
    contracts, data, trust, interaction, or runtime operations owned by this
    lens. Mentioning a subject is not changing its surface.
-2. **Concrete scenario:** Scout can name a plausible failure introduced by the
-   change and the evidence that would confirm or reject it.
-3. **Unique value:** that scenario is not adequately covered by an earlier
-   selected lens. Overlap without a distinct decision means `skipped`.
+2. **Observed signal:** evidence already inspected shows a suspicious behavior,
+   contradiction, uncovered material path, or important gap that the bounded
+   probe cannot resolve. Merely imagining a plausible failure is not enough.
+3. **Unique value:** the lens asks a distinct review question. Inspecting the
+   same files in another lens does not make the question redundant, and the
+   answer could change the verdict or implementation direction.
+
+Classify the result as:
+
+- `skipped` when a gate fails;
+- `light` / `checked` when the highest-risk direct path was inspected and no
+  concrete warning or material unresolved gap remains;
+- `standard` or `deep` only when the probe records the warning or gap, why the
+  light check could not decide it, and which review decision remains open.
+
+A `checked` reason names the direct path inspected and why no separate review is
+needed. A selected reason names the evidence that prevented the same closure.
+Generic curiosity, PR breadth, or a list of topics still worth examining does
+not justify promotion.
 
 Examples of insufficient signals: a cost document discusses production, a
 document has human readers, or a workflow mentions paths, hashes, permissions,
@@ -59,24 +77,30 @@ by itself.
 | simplicity-and-code-health | Human-authored code or documentation can be made clearer without behavior change | Generated files, lockfile-only changes, or a scope too small to simplify meaningfully |
 
 No substantive lens is mandatory. A skipped lens must have a reason tied to the
-actual scope. Two to four selected lenses is typical. More than four requires a
-different concrete failure scenario and evidence target for every additional
-lens; breadth by itself is not a reason.
+actual scope. Do not skip simplicity merely because architecture inspects the
+same code: substantial human-authored changes normally receive at least a light
+simplicity probe. Two to four dedicated lenses is typical; checked light probes
+do not count. Breadth by itself is not a reason to add a dedicated lens.
 
 ## Depth
 
 - `light`: inspect the diff, task, applicable repository rules, and the
-  highest-risk direct path. Use for small, obvious, reversible changes.
+  highest-risk direct path. It may cover a small, clear lens surface inside a
+  large PR and does not require a dedicated worker.
 - `standard`: also inspect adjacent callers/consumers, contracts, tests, and
   relevant failure paths. This is the normal default.
 - `deep`: trace the behavior end to end, inspect history/docs/runtime evidence,
   and test competing assumptions. Use for ambiguous, broad, hard-to-reverse, or
   high-impact changes.
 
-Increase depth for public contracts, persisted data, security/privacy,
-distributed failure semantics, difficult rollback, unclear intent, weak tests,
-or cross-service changes. Do not ask a generic "how detailed?" question; render
-the recommendation and let the user override it.
+Choose depth from the risk and evidence specific to that lens. PR size,
+cross-service scope, a migration, or a public contract is not by itself a reason
+to make every related lens deep. A `deep` reason must name the ambiguity,
+high-impact failure, difficult reversal, or runtime evidence that requires the
+extra work. Depth applies to the lens's deciding question, not every listed
+subtopic; inspect tests only as far as needed to judge the risky behavior. Do
+not ask a generic "how detailed?" question; render the recommendation and let
+the user override it.
 
 ## Ordering
 
@@ -100,36 +124,14 @@ Examples:
   simplicity.
 - Small visual adjustment: experience -> correctness -> simplicity.
 
-## Dedicated Scout threshold
+## Optional evidence delegation
 
-Use a dedicated Scout worker when any of these applies:
+The coordinator performs the initial analysis. It may delegate a bounded search
+for missing evidence, but the delegated worker does not classify lenses or own
+the user-facing result.
 
-- more than one change class or runtime surface;
-- cross-component/service boundary;
-- public contract, migration, security/privacy, or high-availability impact;
-- missing or conflicting intent evidence;
-- large diff whose meaningful paths are not obvious.
+When scope is unresolved, return coherent change groups and one scope question
+instead.
 
-Otherwise the coordinator performs Scout directly.
-
-Using a dedicated Scout changes who profiles the scope, not how many lenses
-should be selected. When included paths form unrelated change groups and no
-task/PR evidence establishes one intent, return the groups and the unresolved
-scope question without a lens agenda. Build the agenda only after the user
-chooses the review boundary.
-
-## Scout output
-
-Return:
-
-1. Exact scope boundary.
-2. Known intent, assumptions, and open questions.
-3. Change class, semantic size, blast radius, reversibility, and evidence
-   quality.
-4. When scope is resolved, an agenda table with `selected/skipped`, depth,
-   reason, and order.
-5. When scope is unresolved, coherent change groups and one scope question
-   instead of an agenda.
-6. Whether confirmation is required before the agenda or first lens.
-
+After the table, state whether confirmation is required.
 Do not return findings, fixes, or a merge verdict.
