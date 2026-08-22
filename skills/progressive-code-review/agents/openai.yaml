@@ -1,6 +1,6 @@
 interface:
   display_name: "Progressive Code Review"
-  short_description: "Staged multi-perspective code review"
+  short_description: "Developer-owned, evidence-driven staged review"
   default_prompt: "Use $progressive-code-review to review my current branch progressively before I open or finalize the pull request."
 
 policy:

@@ -29,14 +29,17 @@ Rank explicit current requirements above stale documentation. Separate
 1. State the problem, beneficiary, expected outcome, and deliberate non-goals in
    plain language.
 2. Identify the source for every material domain rule or acceptance condition.
-3. Trace the primary success path and the most important failure/edge outcomes
+3. Compare the chosen solution with the strongest credible simpler alternative
+   supported by repository evidence or user-provided context. Do not invent
+   hypothetical requirements or redesign the feature without evidence.
+4. Trace the primary success path and the most important failure/edge outcomes
    at a behavioral level.
-4. Compare the actual diff with those outcomes. Look for missing scenarios,
+5. Compare the actual diff with those outcomes. Look for missing scenarios,
    extra scope, changed semantics, and behavior that solves a different
    problem.
-5. Check whether tests encode the intended behavior rather than merely the
+6. Check whether tests encode the intended behavior rather than merely the
    implementation.
-6. Mark intent gaps that prevent a reliable conclusion.
+7. Mark intent gaps that prevent a reliable conclusion.
 
 ## Light / standard / deep
 

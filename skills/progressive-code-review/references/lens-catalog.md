@@ -51,6 +51,13 @@ needed. A selected reason names the evidence that prevented the same closure.
 Generic curiosity, PR breadth, or a list of topics still worth examining does
 not justify promotion.
 
+`light` / `checked` requires affirmative closure evidence, not merely the
+absence of an observed warning. The coordinator may close it directly only
+when the relevant surface is small and fully inspected during the initial
+analysis. Otherwise run a fresh bounded closure probe or promote the lens to
+`standard`. Metadata and another author's summary are context, not sufficient
+closure evidence by themselves.
+
 Examples of insufficient signals: a cost document discusses production, a
 document has human readers, or a workflow mentions paths, hashes, permissions,
 recovery, or configuration. Select production, experience, security, or
@@ -126,9 +133,10 @@ Examples:
 
 ## Optional evidence delegation
 
-The coordinator performs the initial analysis. It may delegate a bounded search
-for missing evidence, but the delegated worker does not classify lenses or own
-the user-facing result.
+The coordinator performs the initial analysis. When a candidate `checked` lens
+is not small enough to inspect fully there, a fresh worker performs a bounded
+closure probe and reports the paths inspected plus `clear` or `promote`. The
+coordinator still classifies lenses and owns the user-facing result.
 
 When scope is unresolved, return coherent change groups and one scope question
 instead.

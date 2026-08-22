@@ -1,13 +1,25 @@
 ---
-name: progressive-code-review
 description: Use when the user explicitly invokes $progressive-code-review or explicitly asks for a progressive or staged branch review; do not use for an ordinary one-pass code review.
+name: progressive-code-review
 ---
-
 # Progressive Code Review
 
-Run an evidence-driven review as a sequence of risk-selected lenses. Review the
-current branch by default, preserve decisions between stages, and surface
-load-bearing problems before details that depend on them.
+## Goal
+
+Help the developer make and own a well-grounded decision about a change:
+whether it solves the intended problem, belongs in the system, and carries
+acceptable risk. A successful review leaves the developer able to explain what
+changed, why this solution was chosen, which assumptions matter, and what
+uncertainty remains. The goal is not to maximize findings or automate approval.
+
+## Mental model
+
+Treat review as collaborative reasoning about the change as a whole, not as
+line-by-line defect collection. The agent is an evidence-driven challenger, not
+an authority: it connects repository evidence, exposes unsupported assumptions,
+and distinguishes material concerns from preferences. The developer contributes
+context that may not exist in the repository, weighs trade-offs, and remains
+accountable for what ships. Delegating construction is not delegating judgment.
 
 ## Non-negotiable behavior
 
@@ -40,9 +52,9 @@ without an explicit fix request.
 Interpret these public forms:
 
 ```text
-$progressive-code-review
-$progressive-code-review --branch <ref>
-$progressive-code-review --branch <ref> --base <ref>
+/progressive-code-review
+/progressive-code-review --branch <ref>
+/progressive-code-review --branch <ref> --base <ref>
 ```
 
 Reject unknown options rather than guessing.
@@ -100,16 +112,15 @@ Validate both base and target refs. Render the exact boundary before Scout:
 base, target, merge base, whether working-tree changes are included, and the
 checkpoint exclusion.
 
-Treat `.review/` as reserved workflow-artifact space. Enumerate changed or
-untracked paths there before finalizing scope. Keep them excluded as required,
-but if anything exists outside the active progressive-review checkpoint, show
-it and add a `blocked-missing-evidence` item until the user confirms that it is
-an artifact and not product code. Never silently return `ready` while such a
-path is unclassified.
+Treat `.review/` as reserved workflow-artifact space. Exclude existing paths
+there without asking the user or blocking review. Inspect only the active
+checkpoint when resuming or cleaning up this review.
 
 ## Start or resume the checkpoint
 
-Use the template in `assets/review-checkpoint.md`.
+Copy the document structure from `assets/review-checkpoint.md`. The template is
+the canonical source for checkpoint sections and user-facing response layout;
+this file defines how to perform the review and fill that structure.
 
 Do not create a new checkpoint while an unrelated-group scope question is
 unresolved. The scope-only Scout remains read-only and reports its groups in
@@ -179,6 +190,11 @@ Scout must inspect:
 - change type, semantic size, blast radius, reversibility, evidence quality,
   and risk signals.
 
+Use repository evidence first. Ask the developer only when a consequential
+conclusion depends on product, stakeholder, or future context that the available
+evidence cannot provide. Make the missing assumption explicit; do not invent
+context.
+
 Scout performs a bounded initial probe of all seven lenses. For each lens it
 records one outcome: `skipped`, `light` (covered by the initial analysis), or a
 dedicated `standard`/`deep` review. Select a dedicated review only when the
@@ -207,47 +223,40 @@ evidence remains.
 Use the three-part applicability gate in `references/lens-catalog.md` to
 classify each lens. Applicability comes from a surface causally changed by the
 reviewed artifact, not from subjects mentioned in documentation, people who
-may read it, or downstream decisions it may inform. Only `standard` and `deep`
-lenses receive dedicated workers.
+may read it, or downstream decisions it may inform. `standard` and `deep`
+lenses receive dedicated reviewers; a candidate `checked` lens may receive the
+bounded closure probe defined in the catalog.
 
 ## Explain the change and review plan
 
-Before agenda confirmation or the first lens, render this complete shape,
-translated into the user's language:
-
-```markdown
-### What this PR changes
-<one plain-language sentence about the user or system outcome>
-<a short before -> after explanation; use one compact flow or up to three
-bullets when clearer than prose>
-
-### How the review will run
-<one or two sentences: how many light checks are complete, how many detailed
-reviews remain, that they run sequentially, when the review pauses, and that it
-ends with a compact PR handoff>
-
-### Review plan
-| Order | Review | Status | Depth | Why |
-|---:|---|---|---|---|
-<all seven lenses>
-```
+Before agenda confirmation or the first lens, write the complete initial chat
+response by filling `## User-facing initial response` in the checkpoint
+template. Follow its headings, order, optional sections, and field guidance;
+write the result in the user's language. This section is the canonical response,
+not source material for another summary.
 
 Use `checked` with `light`, `selected` with `standard`/`deep`, and `skipped`
-with `—` for order and depth. Translate these labels when useful. Before asking
-for confirmation, verify that all three blocks and all seven rows are present.
-The confirmation response itself must contain the complete result; progress
-updates do not satisfy this contract and the response must not refer to content
-"above".
+with `—` for order and depth. Translate these labels when useful. Before saving,
+remove instructional placeholders from the user-facing section and verify that
+every required block, every requested answer, all seven rows, the ordered-review
+rationale, and the next action are present.
 
-Keep all three blocks short. Expand only when the user explicitly asks for a
-detailed explanation. If scope or primary flow is unclear, show the evidence
-gap and resolve it before rendering the blocks.
+After saving the checkpoint, return the Markdown beneath
+`## User-facing initial response` verbatim, excluding only that wrapper heading.
+That content is the initial response; do not generate a second summary. If a
+small, low-risk scope permits the first lens to run immediately, keep this block
+unchanged at the start of the response and append the lens result after it.
+
+Internal checkpoint sections may retain additional evidence, but their lens
+selection, depth, order, and conclusions must match the user-facing block. If
+scope or primary flow is unclear, show the evidence gap and resolve it before
+writing the block.
 
 Use plain review language in every user-facing message. Internal names such as
 Scout, coordinator, worker, and dossier stay internal; say initial analysis,
 light check, or detailed review and name what is actually being examined.
 
-Use evidence-shaped reasons: `checked` names the direct path and why it was
+For each complete `Why` sentence, `checked` names the direct path and why it was
 enough; `selected` names the observed warning or material gap and the decision
 a light check could not resolve; `skipped` names the absent or unchanged
 surface. Prefer a focused initial agenda, typically about four dedicated lenses,
@@ -459,6 +468,9 @@ Derive one verdict:
 - `ready-with-accepted-risk`
 - `not-ready`
 - `blocked-by-missing-evidence`
+
+This verdict is an evidence-based recommendation. The developer owns the final
+merge or shipping decision.
 
 Keep the detailed lens history in the checkpoint. Build the PR-ready summary
 using `assets/pr-handoff.md`:
